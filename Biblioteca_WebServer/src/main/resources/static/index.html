@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Projeto Escolar - Biblioteca</title>
+	
+    
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	
+
+	<link href="css/bootstrap.min.css" rel=stylesheet>
+	
+	
+	<script>
+		$(document).ready(function(){
+		
+/*Método desenvolvido por Magno*/
+			$("#busca").click(function() {
+			
+				var titulo = $("#titulo").val();
+				
+				$("#dadosLivros").empty();
+				
+				var url = "/livro/"+titulo;
+				
+				$.getJSON(url, function(data) {
+				
+					var itens = [];
+					
+					$.each(data, function(i){
+							itens.push("<tr><td>"+this.titulo+"</td><td>"+this.genero+"</td><td>"+this.tomo +"</td><td>"+this.autor+"</td><td>"+this.edicao+"</td><td>"+this.editora+"</td><td>"+this.anoDeEdicao+"</td><td>"+this.volume+"</td><td>"+this.estante+"</td><td>");
+					});
+							
+					$("#dadosLivros").append(itens);
+					
+					$("#e_tomo").val('');
+					
+					$("#c_livro").val('');
+					$("#c_genero").val('');
+					$("#c_tomo").val('');
+					$("#c_autor").val('');
+					$("#c_edicao").val('');
+					$("#c_editora").val('');
+					$("#c_anoDeEdicao").val('');
+					$("#c_volume").val('');
+					$("#c_estante").val('');
+					
+					$("#tomo").val('');
+					
+					$("#titulo").val('');
+					
+					$("#autor").val('');
+					
+				});		
+			});
+			
+/*Método desenvolvido por Magno*/
+			$("#busca2").click(function() {
+			
+				var tomo = $("#tomo").val();
+				
+				$("#dadosLivros").empty();
+				
+				var url = "/livro2/"+tomo;
+				
+				$.getJSON(url, function(data) {
+				
+					var itens = [];
+					
+						itens.push("<tr><td>"+data.titulo+"</td><td>"+data.genero+"</td><td>"+data.tomo +"</td><td>"+data.autor+"</td><td>"+data.edicao+"</td><td>"+data.editora+"</td><td>"+data.anoDeEdicao+"</td><td>"+data.volume+"</td><td>"+data.estante+"</td><td>");
+								
+					$("#dadosLivros").append(itens);
+					
+					$("#e_tomo").val('');
+					
+					$("#c_livro").val('');
+					$("#c_genero").val('');
+					$("#c_tomo").val('');
+					$("#c_autor").val('');
+					$("#c_edicao").val('');
+					$("#c_editora").val('');
+					$("#c_anoDeEdicao").val('');
+					$("#c_volume").val('');
+					$("#c_estante").val('');
+					
+					$("#tomo").val('');
+					
+					$("#titulo").val('');
+					
+					$("#autor").val('');
+				});
+						
+			});
+		
+/*Método desenvolvido por Magno*/
+			$("#cadastrar").click(function() {
+				
+				var titulo = $("#c_livro").val();
+				var genero = $("#c_genero").val();
+				var tomo = $("#c_tomo").val();
+				var autor = $("#c_autor").val();
+				var edicao = $("#c_edicao").val();
+				var editora = $("#c_editora").val();
+				var anoDeEdicao = $("#c_anoDeEdicao").val();
+				var volume = $("#c_volume").val();
+				var estante = $("#c_estante").val();
+				var disponivel = $( "#c_disponivel option:selected").text();
+				
+				var json = JSON.stringify({"titulo":titulo,"genero":genero,"tomo":tomo,"autor":autor,"edicao":edicao,"editora":editora, "anoDeEdicao":anoDeEdicao, "volume":volume, "estante":estante});
+				
+				$.post("/livroInserir", json, function(data){
+					if(data){
+						alert("Livro Cadastrado com Sucesso!");
+					} else{
+						alert("ERRO -> Tomo Cadastrado!");
+					}
+				}, "json");
+				
+				$("#e_tomo").val('');
+				
+				$("#c_livro").val('');
+				$("#c_genero").val('');
+				$("#c_tomo").val('');
+				$("#c_autor").val('');
+				$("#c_edicao").val('');
+				$("#c_editora").val('');
+				$("#c_anoDeEdicao").val('');
+				$("#c_volume").val('');
+				$("#c_estante").val('');
+				
+				$("#tomo").val('');
+				
+				$("#titulo").val('');
+				
+				$("#autor").val('');
+				
+				$("#dadosLivros").empty();
+				
+				
+			});
+		
+/*Método desenvolvido por Magno*/		
+			$("#excluir").click(function() {
+				
+				var tomo = $("#e_tomo").val();
+				
+				$.post("/livroExcluir", JSON.stringify({"tomo":tomo}), function(data){
+				}, "json");
+				
+				alert("Livro Excluido com Sucesso!");
+				
+				$("#e_tomo").val('');
+				
+				$("#c_livro").val('');
+				$("#c_genero").val('');
+				$("#c_tomo").val('');
+				$("#c_autor").val('');
+				$("#c_edicao").val('');
+				$("#c_editora").val('');
+				$("#c_anoDeEdicao").val('');
+				$("#c_volume").val('');
+				$("#c_estante").val('');
+				
+				$("#tomo").val('');
+				
+				$("#titulo").val('');
+				
+				$("#autor").val('');
+				
+				$("#dadosLivros").empty();
+			});
+			
+/*Método desenvolvido por Carlos Eduardo*/
+			$("#busca3").click(function() {
+				
+				var autor = $("#autor").val();
+				
+				$("#dadosLivros").empty();
+				
+				var url = "/livro3/"+autor;
+				
+				$.getJSON(url, function(data) {
+				
+					var itens = [];
+					
+					$.each(data, function(i){
+							itens.push("<tr><td>"+this.titulo+"</td><td>"+this.genero+"</td><td>"+this.tomo +"</td><td>"+this.autor+"</td><td>"+this.edicao+"</td><td>"+this.editora+"</td><td>"+this.anoDeEdicao+"</td><td>"+this.volume+"</td><td>"+this.estante+"</td><td>");
+					});
+							
+					$("#dadosLivros").append(itens);
+
+					$("#e_tomo").val('');
+					
+					$("#c_livro").val('');
+					$("#c_genero").val('');
+					$("#c_tomo").val('');
+					$("#c_autor").val('');
+					$("#c_edicao").val('');
+					$("#c_editora").val('');
+					$("#c_anoDeEdicao").val('');
+					$("#c_volume").val('');
+					$("#c_estante").val('');
+					
+					$("#tomo").val('');
+					
+					$("#titulo").val('');
+					
+					$("#autor").val('');
+				});		
+			});
+		
+		});
+		
+	</script>
+  </head>
+
+
+  <body>
+  
+<!--CADASTRAR LIVRO-->
+  	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    	<header class="masthead mb-auto col-md-offset-5">
+			<h3 class="masthead-brand">Cadastrar Livro</h3>
+		</header>
+	</div>
+
+
+	
+<!--CAIXAS PARA INSERIR OS ATRIBUTOS DO NOVO LIVRO-->
+<!--Primeira Linha-->
+	<div class="row" style="height:50px">
+		<div class="col-md-3">
+			<input type="text" id="c_livro" placeholder="Digite o Nome do Livro">
+		</div>
+	
+		<div class="col-md-3">
+			<input type="text" id="c_genero" placeholder="Digite o Genero">
+		</div>
+	
+		<div class="col-md-3">
+			<input type="text" id="c_tomo" placeholder="Digite o Tomo">
+		</div>
+	
+		<div class="col-md-3">
+			<input type="text" id="c_autor" placeholder="Digite o Nome do Autor">
+		</div>
+	</div>
+
+<!--Segunda Linha-->
+	<div class="row" style="height:50px">
+		<div class="col-md-3">
+			<input type="text" id="c_edicao" placeholder="Digite a Edicao">
+		</div>
+	
+		<div class="col-md-3 width:275px">
+			<input type="text" id="c_editora" placeholder="Digite a Editora">
+		</div>
+	
+		<div class="col-md-3">
+			<input type="text" id="c_anoDeEdicao" placeholder="Digite o Ano de Edicao">
+		</div>
+	
+		<div class="col-md-3">
+			<input type="text" id="c_volume" placeholder="Digite o Volume">
+		</div>
+	</div>
+	
+	
+	
+<!--Terceira Linha-->
+	<div class="row" style="height:50px">	
+		<div class="col-md-3">
+			<input type="text" id="c_estante" placeholder="Digite a Posicao">
+		</div>
+	</div>
+	
+	
+		
+<!--BOTAO CADASTRAR LIVRO-->	
+	<div class="row" style="height:150px">
+		<button id="cadastrar" class="col-md-offset-5 btn btn-primary">Cadastrar</button>
+	</div>
+	
+	
+	
+<!--EXCLUIR LIVRO-->	
+	<div class="row bg-warning" style="height:150px">
+		<div class="col-md-offset-4 bg-warning">
+    		<label for="excluirLivro"><h3>Excluir Livro</h4></label>
+			<input type="text" id="e_tomo"  placeholder="Digite o Tomo do Livro">
+			<button id="excluir" class="btn btn-primary">Excluir</button>
+		</div>
+	</div>
+
+	
+	
+<!--BUSCAR LIVRO-->
+	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    	<header class="masthead mb-auto col-md-offset-5">
+			<h3 class="masthead-brand">Buscar Livros</h3>
+		</header>
+	</div>
+	
+	
+<!--Buscar Livro Por Titulo-->
+	<div id="painelBusca" style="100px">
+  		<div class="row"> 		
+  			<div class="col-md-4">
+    			<label for="buscarLivroPorTitulo">Buscar Livro por Titulo</label>
+				<input type="text" id="titulo"  placeholder="Digite o Título">
+				<button id="busca" class="btn btn-primary">Buscar</button>
+			</div>
+			
+			
+			
+<!--Buscar Livro Por Tomo-->
+			<div class="col-md-4">
+    			<label for="buscarLivroPorTomo">Buscar Livro por Tomo</label>
+				<input type="text" id="tomo"  placeholder="Digite o Tomo">
+				<button id="busca2" class="btn btn-primary">Buscar</button>
+			</div>
+
+
+<!--Buscar Livro Por Autor-->			
+			<div class="col-md-4">
+    			<label for="buscarLivroPorEdicao">Buscar Livro por Autor</label>
+				<input type="text" id="autor"  placeholder="Digite o Nome do Autor">
+				<button id="busca3" class="btn btn-primary">Buscar</button>
+			</div>
+		</div>
+	</div>	
+	
+	<div class="row" style="height:90px">
+	</div>
+
+
+<!--<div class="col-md-1"> TODO meio de reservar um livro
+			<select id="c_disponivel" class="input-small form-control">
+                <option value="" selected="selected">Reserva</option>
+                <option value="true">sim</option>
+                <option value="false">nao</option>
+            </select>     
+		</div>-->
+
+
+<!--TABELA-->
+	<table class="table table-bordered"> 
+		<caption>
+			<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    			<header class="masthead mb-auto col-md-offset-5">
+					<h3 class="masthead-brand">Livros Encontrados</h3>
+				</header>
+			</div>
+		</caption>
+			<thead class="thead-dark">
+				<tr> 
+					<th><h4>Titulo</h4></th>
+					<th><h4>Genero</h4></th> 
+					<th><h4>Tomo</h4></th> 
+					<th><h4>Autor</h4></th>
+					<th><h4>Edição</h4></th>
+					<th><h4>Editora</h4></th>
+					<th><h4>Ano de Edição</h4></th>
+					<th><h4>Volume</h4></th>
+					<th><h4>Posição</h4></th>
+					<!--<th><h4>Dísponivel</h4></th>-->
+				</tr> 
+			</thead> 
+			<tbody id="dadosLivros"> 
+			</tbody> 
+	</table>
+			
+  </body>
+</html>
