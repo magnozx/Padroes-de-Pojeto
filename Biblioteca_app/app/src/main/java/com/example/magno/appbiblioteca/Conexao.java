@@ -1,26 +1,34 @@
 package com.example.magno.appbiblioteca;
 
 import android.os.StrictMode;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class Conexao {
 
+
     //Função para buscar livros por título
     public JSONArray enviarGetParaBuscarLivrosPorTitulo(String tituloDoLivroProcurado) throws IOException, JSONException {
 
-        String url = "http://192.168.0.13:1235/livro/"+tituloDoLivroProcurado;
+        String url = "https://applibary.herokuapp.com/livro/"+tituloDoLivroProcurado;
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -28,21 +36,19 @@ public class Conexao {
         // optional default is GET
         con.setRequestMethod("GET");
 
-        //add request header
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
-        con.disconnect();
-
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
+
         in.close();
 
         JSONArray retorno = new JSONArray(response.toString());
+
+        con.disconnect();
 
         return retorno;
     }
@@ -50,7 +56,7 @@ public class Conexao {
     //Função para buscar livros por tomo
     public JSONObject enviarGetParaBuscarLivrosPorTomo(String tomoDoLivroProcurado) throws IOException, JSONException {
 
-        String url = "http://192.168.0.13:1235/livro2/"+tomoDoLivroProcurado;
+        String url = "https://applibary.herokuapp.com/livro2/"+tomoDoLivroProcurado;
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -58,58 +64,43 @@ public class Conexao {
         // optional default is GET
         con.setRequestMethod("GET");
 
-        //add request header
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
-        con.disconnect();
-
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
+
         in.close();
 
         JSONObject retorno = new JSONObject(response.toString());
+
+        con.disconnect();
 
         return retorno;
     }
 
 
-    /*//Função para transformar objeto Json em um lista livros
-    public List<Livro> listarLivrosEncontrados(JSONArray response) {
-
-        List<Livro> listaDeLivrosEncontrados = new LinkedList<>();
-
-        try {
-
-            for (int i = 0; i < response.length(); i++) {
-                JSONObject obj = response.getJSONObject(i);
-                listaDeLivrosEncontrados.add(new Livro(obj.getString("titulo"),obj.getString("genero"),obj.getString("tomo"),obj.getString("autor"),obj.getString("edicao"),obj.getString("editora"),obj.getString("anoDeEdicao"),obj.getString("volume"),obj.getString("estante")));
-            }
-
-        } catch (JSONException e) {
-            // handle exception
-        }
-
-        return listaDeLivrosEncontrados;
-    }
-
-*/
     //Função para Cadastrar um Livro
-    public void enviarPostParaCadastrarLivro(Livro livroParaSerCadastrado) throws Exception {
+    public void enviarPostParaCadastrarLivro(Livro livroParaSerCadastrado) throws IOException, JSONException {
 
-        String url = "http://192.168.0.13:1235/livroInserir";
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        String url = "https://applibary.herokuapp.com/livroInserir";
 
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
-        //add request header
+
         con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept","application/json");
+        con.setDoOutput(true);
+        con.setDoInput(true);
+
+        con.connect();
 
         JSONObject urlParameters = new JSONObject();
 
@@ -123,12 +114,13 @@ public class Conexao {
         urlParameters.put("volume",livroParaSerCadastrado.getVolume());
         urlParameters.put("estante",livroParaSerCadastrado.getEstante());
 
-        // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(String.valueOf(urlParameters));
-        wr.flush();
-        wr.close();
+        OutputStream outputPost = new BufferedOutputStream(con.getOutputStream());
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputPost));
+        writer.write(urlParameters.toString());
+        writer.flush();
+        writer.close();
+
+        con.disconnect();
     }
 
 }

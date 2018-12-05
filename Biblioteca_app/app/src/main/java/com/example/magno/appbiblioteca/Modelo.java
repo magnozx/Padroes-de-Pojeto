@@ -1,6 +1,7 @@
 package com.example.magno.appbiblioteca;
 
 import android.os.StrictMode;
+import android.widget.EditText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,12 @@ public class Modelo {
         }
 
         return livrosEncontrados;
+    }
+
+    public void cadastrarNovoLivro(Livro livroParaSerCadastrado) throws IOException, JSONException {
+
+        conexao.enviarPostParaCadastrarLivro();
+
     }
 }
 
